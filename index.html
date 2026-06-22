@@ -29,11 +29,11 @@
     --text-muted:    #9aa6b9;
     --text-dim:      #6b7689;
 
-    --accent:        #FBBF24;   /* Sport-Gold / Neon-Bernstein */
+    --accent:        #FBBF24;   /* Sport-Gold / warmes Bernstein */
     --accent-2:      #F59E0B;   /* tieferes Bernstein */
     --accent-soft:   rgba(251,191,36,0.12);
-    --accent-line:   rgba(251,191,36,0.32);
-    --accent-glow:   rgba(251,191,36,0.40);
+    --accent-line:   rgba(251,191,36,0.28);
+    --accent-glow:   rgba(251,191,36,0.34);
 
     /* Sekundär-Tints je Modus */
     --beach:         #38bdf8;
@@ -41,12 +41,21 @@
     --beach-glow:    rgba(56,189,248,0.30);
 
     --maxw:          1140px;
-    --shadow:        0 18px 60px rgba(0,0,0,0.55);
+    --shadow:        0 24px 70px rgba(0,0,0,0.45);
 
-    /* beveled / abgeschrägte Kanten */
-    --cut:           16px;
-    --bevel:         polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
-    --bevel-sm:      polygon(11px 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%, 0 11px);
+    /* weiche, elegante Rundungen statt harter Kanten */
+    --radius:        22px;
+    --radius-sm:     14px;
+    --radius-pill:   999px;
+  }
+
+  /* ---- Beach-Modus: Akzent zieht mehr ins Gelbe ---- */
+  body.mode-beach {
+    --accent:      #FDE047;   /* helleres, sonniges Gelb */
+    --accent-2:    #FACC15;   /* warmes Gelb */
+    --accent-soft: rgba(253,224,71,0.13);
+    --accent-line: rgba(253,224,71,0.30);
+    --accent-glow: rgba(250,204,21,0.34);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,18 +105,23 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px; padding: 14px 20px; max-width: var(--maxw); margin: 0 auto;
   }
-  .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .brand .logo {
-    width: 42px; height: 42px; flex-shrink: 0;
+    width: 38px; height: 38px; flex-shrink: 0;
     display: grid; place-items: center;
-    clip-path: var(--bevel-sm);
+    border-radius: 50%;
     background: linear-gradient(140deg, var(--accent), var(--accent-2));
     box-shadow: 0 6px 20px var(--accent-glow);
     color: #1a1206;
   }
-  .brand .title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; white-space: nowrap; }
-  .brand .title span { color: var(--accent); }
-  .brand .sub { font-size: .7rem; color: var(--text-muted); letter-spacing: .18em; text-transform: uppercase; }
+  .brand .title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: .82rem; letter-spacing: -0.005em; line-height: 1.2;
+    display: flex; flex-direction: column;
+  }
+  .brand .title .t-main { color: var(--text); }
+  .brand .title .t-accent { color: var(--accent); font-weight: 600; }
+  .brand .sub { font-size: .62rem; color: var(--text-muted); letter-spacing: .16em; text-transform: uppercase; margin-top: 2px; }
 
   nav.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
   nav.tabs button {
@@ -152,13 +166,13 @@
   /* Rahmen-Layer (liegt hinten, ragt 1px hervor => beveled Border) */
   .card::after {
     content: ""; position: absolute; inset: 0; z-index: -2;
-    clip-path: var(--bevel);
+    border-radius: var(--radius);
     background: linear-gradient(135deg, var(--accent-line), rgba(255,255,255,0.05) 42%, rgba(251,191,36,0.10));
   }
   /* Füll-Layer (Glas) */
   .card::before {
     content: ""; position: absolute; inset: 1px; z-index: -1;
-    clip-path: var(--bevel);
+    border-radius: var(--radius);
     background:
       linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02) 55%, rgba(0,0,0,0.12));
     backdrop-filter: blur(14px);
@@ -185,7 +199,7 @@
   .mode-switch {
     position: relative; display: inline-flex; align-items: center;
     margin: 6px auto 0; padding: 6px; gap: 0;
-    clip-path: var(--bevel-sm);
+    border-radius: var(--radius-sm);
     background:
       linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
     border: 1px solid var(--border);
@@ -196,7 +210,7 @@
   .mode-switch .knob {
     position: absolute; top: 6px; bottom: 6px; left: 6px;
     width: calc(50% - 6px);
-    clip-path: var(--bevel-sm);
+    border-radius: var(--radius-sm);
     background: linear-gradient(160deg, var(--accent), var(--accent-2));
     box-shadow: 0 8px 22px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.45);
     transition: transform .42s cubic-bezier(.6,.05,.2,1), background .42s;
@@ -226,7 +240,7 @@
   .cd-box {
     position: relative; min-width: 84px; text-align: center; padding: 16px 14px; z-index: 0;
   }
-  .cd-box::before { content:""; position:absolute; inset:0; z-index:-1; clip-path: var(--bevel-sm);
+  .cd-box::before { content:""; position:absolute; inset:0; z-index:-1; border-radius: var(--radius-sm);
     background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
     border: 1px solid var(--border); }
   .cd-num { font-family: 'Space Grotesk', sans-serif; font-size: 2.1rem; font-weight: 700; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
@@ -235,8 +249,8 @@
 
   /* ---------- Hero ---------- */
   .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 0; overflow: visible; padding: 0; }
-  .hero::before, .hero::after { clip-path: var(--bevel); }
-  .hero .media { position: relative; min-height: 280px; overflow: hidden; clip-path: var(--bevel); }
+  .hero::before, .hero::after { border-radius: var(--radius); }
+  .hero .media { position: relative; min-height: 280px; overflow: hidden; border-radius: var(--radius); }
   .hero .media .fill { position: absolute; inset: 0; display: grid; place-items: center; }
   .hero .media.halle .fill { background: linear-gradient(155deg, #2a1d05, #14110a); }
   .hero .media.beach .fill { background: linear-gradient(155deg, #06283d, #0a1622); }
@@ -247,7 +261,7 @@
   .badge {
     display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
     background: var(--accent-soft); color: var(--accent);
-    border: 1px solid var(--accent-line); clip-path: var(--bevel-sm);
+    border: 1px solid var(--accent-line); border-radius: var(--radius-sm);
     padding: 7px 15px; font-size: .74rem; font-weight: 700; letter-spacing: .05em; margin-bottom: 16px;
   }
   .badge.beach { background: var(--beach-soft); color: var(--beach); border-color: rgba(56,189,248,.32); }
@@ -265,7 +279,7 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 9px;
     font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer;
     padding: 14px 24px; border: none; text-decoration: none;
-    clip-path: var(--bevel-sm);
+    border-radius: var(--radius-sm);
     transition: transform .25s ease, filter .25s ease;
   }
   .btn-primary { background: linear-gradient(140deg, var(--accent), var(--accent-2)); color: #1a1206;
@@ -283,18 +297,18 @@
   .team-list li {
     display: flex; align-items: center; gap: 12px; padding: 11px 14px;
     background: rgba(255,255,255,.03); border: 1px solid var(--border);
-    clip-path: var(--bevel-sm); transition: all .22s ease;
+    border-radius: var(--radius-sm); transition: all .22s ease;
   }
   .team-list li:hover { border-color: var(--accent-line); transform: translateX(4px); }
   .team-list .num {
-    width: 27px; height: 27px; flex-shrink: 0; clip-path: var(--bevel-sm);
+    width: 27px; height: 27px; flex-shrink: 0; border-radius: var(--radius-sm);
     display: grid; place-items: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .8rem;
     background: var(--accent-soft); color: var(--accent);
   }
   .team-list .nm { font-weight: 600; }
   .team-list .tag { margin-left: auto; font-size: .72rem; color: var(--text-muted); }
   .slots-info { margin-top: 16px; font-size: .85rem; color: var(--text-muted); }
-  .slots-bar { height: 9px; background: rgba(255,255,255,.07); overflow: hidden; margin-top: 9px; clip-path: var(--bevel-sm); }
+  .slots-bar { height: 9px; background: rgba(255,255,255,.07); overflow: hidden; margin-top: 9px; border-radius: var(--radius-sm); }
   .slots-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
 
   /* Info rows */
@@ -308,7 +322,7 @@
   ul.rules .ic { color: var(--accent); flex-shrink: 0; }
 
   .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-  .chip { font-size: .8rem; font-weight: 600; padding: 7px 13px; clip-path: var(--bevel-sm);
+  .chip { font-size: .8rem; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm);
     background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--text-muted); }
 
   /* Saison-Info Banner */
@@ -324,7 +338,7 @@
   .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .value-card { text-align: center; }
   .value-card .vic {
-    width: 58px; height: 58px; margin: 0 auto 16px; clip-path: var(--bevel-sm);
+    width: 58px; height: 58px; margin: 0 auto 16px; border-radius: var(--radius-sm);
     display: grid; place-items: center; color: var(--accent);
     background: var(--accent-soft); border: 1px solid var(--accent-line);
   }
@@ -342,20 +356,20 @@
   .field input, .field textarea {
     width: 100%; font: inherit; color: var(--text);
     background: rgba(255,255,255,.04); border: 1px solid var(--border);
-    clip-path: var(--bevel-sm); padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
+    border-radius: var(--radius-sm); padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
   }
   .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .field textarea { resize: vertical; min-height: 110px; }
   .contact-person { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px dashed var(--border); }
   .contact-person:last-child { border-bottom: none; }
-  .contact-person .av { width: 46px; height: 46px; clip-path: var(--bevel-sm); flex-shrink: 0;
+  .contact-person .av { width: 46px; height: 46px; border-radius: var(--radius-sm); flex-shrink: 0;
     display: grid; place-items: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; background: var(--accent-soft); color: var(--accent); }
 
   .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .gallery-grid a { position: relative; z-index: 0; aspect-ratio: 4/3; clip-path: var(--bevel);
+  .gallery-grid a { position: relative; z-index: 0; aspect-ratio: 4/3; border-radius: var(--radius);
     display: grid; place-items: center; color: var(--text-muted);
     text-decoration: none; transition: all .3s ease; font-size: .85rem; gap: 8px; flex-direction: column; }
-  .gallery-grid a::before { content:""; position:absolute; inset:0; z-index:-1; clip-path: var(--bevel);
+  .gallery-grid a::before { content:""; position:absolute; inset:0; z-index:-1; border-radius: var(--radius);
     background: linear-gradient(155deg, #16213a, #0c1320); border: 1px solid var(--border); }
   .gallery-grid a:hover { transform: translateY(-5px); color: var(--accent); filter: drop-shadow(0 14px 32px rgba(0,0,0,.5)) drop-shadow(0 0 22px var(--accent-glow)); }
 
@@ -366,6 +380,55 @@
   .faq-item.open .chev { transform: rotate(180deg); }
   .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease; color: var(--text-muted); }
   .faq-item.open .faq-a { max-height: 340px; padding-bottom: 18px; }
+
+  /* ---------- Anfrage-Hinweis (Hero) ---------- */
+  .reg-note { display: flex; gap: 11px; align-items: flex-start; margin: 4px 0 20px;
+    padding: 13px 15px; border-radius: var(--radius-sm);
+    background: var(--accent-soft); border: 1px solid var(--accent-line); }
+  .reg-note .ic { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+  .reg-note p { font-size: .86rem; color: var(--text); }
+
+  /* ---------- MODAL (Teilnahme-Anfrage) ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(6,9,14,0.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    animation: fade .3s ease;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    position: relative; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto;
+    border-radius: var(--radius); padding: 28px;
+    background: linear-gradient(165deg, #141a26, #0d121b);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow), 0 0 40px var(--accent-glow);
+    animation: rise .45s cubic-bezier(.2,.7,.3,1);
+  }
+  .modal h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+  .modal .modal-sub { color: var(--text-muted); font-size: .9rem; margin: 6px 0 18px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    display: grid; place-items: center; cursor: pointer;
+    border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-muted); transition: all .2s ease;
+  }
+  .modal-close:hover { color: var(--accent); border-color: var(--accent-line); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-msg { margin-top: 12px; font-size: .85rem; color: var(--accent); display: none; }
+  .form-msg.show { display: block; }
+
+  /* ---------- Galerie-Passwortsperre ---------- */
+  .gallery-gate { max-width: 440px; margin: 0 auto; text-align: center; padding: 36px 28px; }
+  .gallery-gate .lock-ic {
+    width: 60px; height: 60px; margin: 0 auto 18px; display: grid; place-items: center;
+    border-radius: 50%; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid var(--accent-line);
+  }
+  .gallery-gate h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+  .gallery-gate p { color: var(--text-muted); font-size: .92rem; margin-bottom: 20px; }
+  .gallery-gate .gate-row { display: flex; gap: 10px; }
+  .gallery-gate input { flex: 1; }
+  .gate-error { color: #fda4a4; font-size: .85rem; margin-top: 12px; min-height: 1.1em; }
 
   /* Footer */
   footer.site-foot { border-top: 1px solid var(--border); margin-top: 44px; padding: 30px 0; color: var(--text-muted); font-size: .88rem; }
@@ -386,6 +449,7 @@
     .grid-2, .contact-grid { grid-template-columns: 1fr; }
     .values { grid-template-columns: 1fr; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
   }
   @media (max-width: 680px) {
     nav.tabs { position: fixed; inset: 66px 12px auto 12px; flex-direction: column;
@@ -524,8 +588,31 @@
     <section>
       <p class="eyebrow">Galerie</p>
       <h2 class="section-title">Impressionen</h2>
-      <p class="lead" style="margin-bottom:22px;" id="galleryLead"></p>
-      <div class="gallery-grid" id="galleryGrid"></div>
+
+      <!-- Passwort-Sperre -->
+      <article class="card gallery-gate" id="galleryGate">
+        <span class="lock-ic" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </span>
+        <h3>Geschützter Bereich</h3>
+        <p>Unsere Bildergalerie ist passwortgeschützt. Bitte gib das Passwort ein, das du von uns erhalten hast.</p>
+        <form id="galleryGateForm" novalidate>
+          <div class="gate-row">
+            <div class="field" style="margin-bottom:0;flex:1;">
+              <label for="galleryPw" class="visually-hidden">Passwort</label>
+              <input id="galleryPw" type="password" placeholder="Passwort eingeben" autocomplete="off" />
+            </div>
+            <button class="btn btn-primary" type="submit">Anzeigen</button>
+          </div>
+          <div class="gate-error" id="galleryError" role="alert"></div>
+        </form>
+      </article>
+
+      <!-- Galerie-Inhalt (erst nach Passwort sichtbar) -->
+      <div id="galleryContent" style="display:none;">
+        <p class="lead" style="margin-bottom:22px;" id="galleryLead"></p>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
     </section>
   </div>
 
@@ -538,6 +625,37 @@
     </section>
   </div>
 </main>
+
+<!-- ============================================================= -->
+<!--  MODAL: TEILNAHME BEANTRAGEN (Anfrage)                         -->
+<!-- ============================================================= -->
+<div class="modal-overlay" id="regModal" role="dialog" aria-modal="true" aria-labelledby="regModalTitle">
+  <div class="modal">
+    <button class="modal-close" id="regModalClose" aria-label="Schließen">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h3 id="regModalTitle">Teilnahme beantragen</h3>
+    <p class="modal-sub" id="regModalSub"></p>
+    <form id="regForm" novalidate>
+      <div class="field"><label for="rf-team">Teamname *</label><input id="rf-team" type="text" required /></div>
+      <div class="form-row">
+        <div class="field"><label for="rf-contact">Ansprechpartner *</label><input id="rf-contact" type="text" required autocomplete="name" /></div>
+        <div class="field"><label for="rf-phone">Telefon</label><input id="rf-phone" type="tel" autocomplete="tel" /></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="rf-mail">E-Mail *</label><input id="rf-mail" type="email" required autocomplete="email" /></div>
+        <div class="field"><label for="rf-count">Anzahl Spieler</label><input id="rf-count" type="number" min="1" inputmode="numeric" /></div>
+      </div>
+      <div class="field"><label for="rf-level">Niveau (Hobby / ambitioniert)</label><input id="rf-level" type="text" /></div>
+      <div class="field"><label for="rf-msg">Nachricht (optional)</label><textarea id="rf-msg"></textarea></div>
+      <button class="btn btn-primary" type="submit" style="width:100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Anfrage absenden
+      </button>
+      <div class="form-msg" id="regFormMsg">Dein E-Mail-Programm öffnet sich mit der fertigen Anfrage – bitte nur noch abschicken.</div>
+    </form>
+  </div>
+</div>
 
 <footer class="site-foot">
   <div class="wrap foot-inner">
@@ -609,10 +727,10 @@ const DATA = {
       },
 
       registration: {
-        open: true,                            // false => "Anmeldung geschlossen"
+        open: true,                            // false => "Anfragen aktuell geschlossen"
         email: "anmeldung@fbg-erlangen.de",
-        subject: "Anmeldung Volleyballturnier - [Teamname]",
-        bodyTemplate: "Hallo FBG-Volleyball-Team,\n\nwir möchten uns für das Hallen-Turnier anmelden:\n\nTeamname: \nAnzahl Spieler: \nAnsprechpartner: \nTelefon: \nNiveau (Hobby/ambitioniert): \n\nViele Grüße"
+        subject: "Teilnahme-Anfrage Hallen-Turnier - [Teamname]",
+        note: "Die Teilnahme erfolgt nur auf Anfrage. Reiche unten deine Anfrage ein – wir prüfen freie Plätze und melden uns dann mit der Bestätigung bei dir."
       },
 
       /* Beschreibung der Saison/Kategorie (Banner) */
@@ -662,8 +780,8 @@ const DATA = {
       registration: {
         open: true,
         email: "anmeldung@fbg-erlangen.de",
-        subject: "Anmeldung Volleyballturnier - [Teamname]",
-        bodyTemplate: "Hallo FBG-Volleyball-Team,\n\nwir möchten uns für das Beach-Turnier anmelden:\n\nTeamname: \nAnzahl Spieler: \nAnsprechpartner: \nTelefon: \nNiveau (Hobby/ambitioniert): \n\nViele Grüße"
+        subject: "Teilnahme-Anfrage Beach-Turnier - [Teamname]",
+        note: "Die Teilnahme erfolgt nur auf Anfrage. Reiche unten deine Anfrage ein – wir prüfen freie Plätze und melden uns dann mit der Bestätigung bei dir."
       },
 
       season: {
@@ -709,8 +827,9 @@ const DATA = {
     { name: "Sarah Becker",   role: "Anmeldung & Orga", email: "sarah@fbg-erlangen.de" }
   ],
 
-  /* ---- GALERIE ---- */
+  /* ---- GALERIE (passwortgeschützt) ---- */
   gallery: {
+    password: "volleyball",     // <-- Passwort für den Galerie-Zugang hier festlegen
     lead: "Eindrücke von vergangenen Turnieren. Klick auf ein Bild, um das ganze Album zu öffnen.",
     albums: [
       { label: "Beachcup 2026", url: "#" },
@@ -758,6 +877,7 @@ const ICON = {
   level:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
   mail:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
   arrow:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  info:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
   image:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
   /* Duo-Tone Hallensymbol: Gebäude (kräftig) + Boden (gedimmt) */
   hall:'<svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18" opacity="0.4"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6" opacity="0.5"/></svg>',
@@ -773,13 +893,23 @@ const ICON = {
 };
 const VALUE_ICONS = [ICON.heart, ICON.smile, ICON.link];
 
-/* ---------- mailto Link bauen ---------- */
-function buildMailto(reg, teamPlaceholder) {
-  const subj = (reg.subject || "").replace("[Teamname]", teamPlaceholder || "");
-  const params = [];
-  if (subj) params.push("subject=" + encodeURIComponent(subj));
-  if (reg.bodyTemplate) params.push("body=" + encodeURIComponent(reg.bodyTemplate));
-  return "mailto:" + reg.email + (params.length ? "?" + params.join("&") : "");
+/* ---------- mailto Link aus Anfrage-Formular bauen ---------- */
+function buildRequestMailto(reg, f) {
+  const subj = (reg.subject || "Teilnahme-Anfrage").replace("[Teamname]", f.team || "");
+  const body =
+    "Hallo FBG-Volleyball-Team,\n\n" +
+    "wir möchten gerne am Turnier teilnehmen und reichen folgende Anfrage ein:\n\n" +
+    "Teamname: " + (f.team || "") + "\n" +
+    "Ansprechpartner: " + (f.contact || "") + "\n" +
+    "E-Mail: " + (f.mail || "") + "\n" +
+    "Telefon: " + (f.phone || "") + "\n" +
+    "Anzahl Spieler: " + (f.count || "") + "\n" +
+    "Niveau: " + (f.level || "") + "\n" +
+    (f.msg ? "\nNachricht:\n" + f.msg + "\n" : "") +
+    "\nViele Grüße";
+  return "mailto:" + reg.email +
+    "?subject=" + encodeURIComponent(subj) +
+    "&body=" + encodeURIComponent(body);
 }
 
 /* aktives Turnier-Objekt */
@@ -789,7 +919,7 @@ function activeT() { return DATA.tournaments[MODE]; }
    RENDER-FUNKTIONEN
 ================================================================= */
 function renderBrand() {
-  $("#brandTitle").innerHTML = DATA.brand.title + ' <span>' + DATA.brand.titleAccent + '</span>';
+  $("#brandTitle").innerHTML = '<span class="t-main">' + DATA.brand.title + '</span><span class="t-accent">' + DATA.brand.titleAccent + '</span>';
   $("#brandSub").textContent = DATA.brand.subtitle;
   $("#footLeft").innerHTML = "© " + new Date().getFullYear() + " " + DATA.brand.title + " · " + DATA.brand.titleAccent;
   $("#footRight").innerHTML = '<a href="mailto:' + DATA.brand.contactEmail + '" style="color:var(--accent);text-decoration:none;">' + DATA.brand.contactEmail + '</a>';
@@ -869,8 +999,11 @@ function renderHero() {
 
   const reg = t.registration;
   const regBtn = reg.open
-    ? '<a class="btn btn-primary" href="' + buildMailto(reg, "") + '">' + ICON.mail + ' Jetzt Team anmelden</a>'
-    : '<span class="btn btn-ghost" style="cursor:default;opacity:.7;">Anmeldung geschlossen</span>';
+    ? '<button class="btn btn-primary" type="button" id="openRegBtn">' + ICON.mail + ' Teilnahme beantragen</button>'
+    : '<span class="btn btn-ghost" style="cursor:default;opacity:.7;">Anfragen aktuell geschlossen</span>';
+  const note = reg.note
+    ? '<div class="reg-note"><span class="ic">' + ICON.info + '</span><p>' + reg.note + '</p></div>'
+    : '';
 
   $("#hero").innerHTML =
     '<div class="media ' + MODE + '"><div class="fill">' + media + '</div></div>' +
@@ -884,9 +1017,10 @@ function renderHero() {
         metaItem(ICON.pin, "Ort", t.location) +
         metaItem(ICON.euro, "Startgebühr", t.fee) +
       '</div>' +
+      note +
       '<div class="btn-row">' +
         regBtn +
-        '<a class="btn btn-ghost" href="#detailsAnchor" id="scrollDetails">' + ICON.arrow + ' Zu den Anmelde-Infos</a>' +
+        '<a class="btn btn-ghost" href="#detailsAnchor" id="scrollDetails">' + ICON.arrow + ' Zu den Turnier-Infos</a>' +
       '</div>' +
     '</div>';
 
@@ -894,6 +1028,8 @@ function renderHero() {
     e.preventDefault();
     $("#detailsAnchor").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+  const openBtn = $("#openRegBtn");
+  if (openBtn) openBtn.addEventListener("click", openRegModal);
 }
 function metaItem(ic, k, v) {
   return '<div class="meta"><span class="ic">' + ic + '</span><div><div class="k">' + k + '</div><div class="v">' + v + '</div></div></div>';
@@ -1018,13 +1154,37 @@ function renderContact() {
 }
 function initials(n) { return n.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(); }
 
-/* Galerie */
+/* Galerie (passwortgeschützt) */
 function renderGallery() {
   $("#galleryLead").textContent = DATA.gallery.lead;
   $("#galleryGrid").innerHTML = DATA.gallery.albums.map(a =>
     '<a href="' + a.url + '"' + (a.url.startsWith("http") ? ' target="_blank" rel="noopener"' : '') + '>' +
       ICON.image + '<span>' + a.label + '</span></a>'
   ).join("");
+
+  /* schon in dieser Sitzung freigeschaltet? */
+  if (sessionStorage.getItem("galleryUnlocked") === "1") unlockGallery();
+
+  $("#galleryGateForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const pw = $("#galleryPw").value;
+    const err = $("#galleryError");
+    if (pw === DATA.gallery.password) {
+      err.textContent = "";
+      sessionStorage.setItem("galleryUnlocked", "1");
+      unlockGallery();
+    } else {
+      err.textContent = "Falsches Passwort – bitte erneut versuchen.";
+      $("#galleryPw").value = "";
+      $("#galleryPw").focus();
+    }
+  });
+}
+function unlockGallery() {
+  $("#galleryGate").style.display = "none";
+  const content = $("#galleryContent");
+  content.style.display = "block";
+  content.classList.add("swap-anim");
 }
 
 /* FAQ */
@@ -1073,6 +1233,45 @@ function startCountdown() {
   cdTimer = setInterval(tick, 1000);
 }
 
+/* ---------- Teilnahme-Anfrage Modal ---------- */
+function openRegModal() {
+  const t = activeT();
+  $("#regModalSub").textContent = "Für: " + t.name + " · " + t.dateLabel;
+  $("#regFormMsg").classList.remove("show");
+  $("#regModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => $("#rf-team").focus(), 60);
+}
+function closeRegModal() {
+  $("#regModal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+function setupRegModal() {
+  $("#regModalClose").addEventListener("click", closeRegModal);
+  $("#regModal").addEventListener("click", (e) => { if (e.target.id === "regModal") closeRegModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeRegModal(); });
+
+  $("#regForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = {
+      team:    $("#rf-team").value.trim(),
+      contact: $("#rf-contact").value.trim(),
+      mail:    $("#rf-mail").value.trim(),
+      phone:   $("#rf-phone").value.trim(),
+      count:   $("#rf-count").value.trim(),
+      level:   $("#rf-level").value.trim(),
+      msg:     $("#rf-msg").value.trim()
+    };
+    if (!f.team || !f.contact || !f.mail) {
+      $("#regForm").reportValidity();
+      return;
+    }
+    const reg = activeT().registration;
+    $("#regFormMsg").classList.add("show");
+    window.location.href = buildRequestMailto(reg, f);
+  });
+}
+
 /* ---------- Mobile Menu ---------- */
 $("#menuBtn").addEventListener("click", () => {
   const nav = $("#navTabs");
@@ -1085,6 +1284,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderBrand();
   renderNav();
   setupModeSwitch();
+  setupRegModal();
   renderPast();
   renderValues();
   renderAbout();
